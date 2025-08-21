@@ -1,9 +1,6 @@
 package com.example.mvc_spring_postgres.controller.api.v1.auth;
 
-import com.example.mvc_spring_postgres.dto.request.CreateUserBodyRequest;
-import com.example.mvc_spring_postgres.dto.response.CreateUserDataResponse;
 import com.example.mvc_spring_postgres.service.user.impl.JwtTokenServiceImpl;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,13 +21,12 @@ public class AuthController {
 
     //**************GET**************//
 
-
-    @GetMapping("access_token")
-    public ResponseEntity<String> getAccessToken()throws IOException {
+    @GetMapping("access_token/{code}")
+    public ResponseEntity<String> getAccessToken(@PathVariable String code, @RequestParam(name = "redirect_uri") String redirectUri)throws IOException {
         try {
-            assert jwtTokenService != null;
-            String jwt = jwtTokenService.oauthGetAccessToken();
-        return ResponseEntity.status(HttpStatus.OK).body(jwt);
+
+            String jwt = jwtTokenService.oauthGetAccessToken(code, redirectUri);
+            return ResponseEntity.status(HttpStatus.OK).body(jwt);
         }
         catch (Exception e) {
             log.error("Error getting access token: {}", e.getMessage());
@@ -38,8 +34,6 @@ public class AuthController {
         }
 
     }
-
-
     //**************POST**************//
 
 

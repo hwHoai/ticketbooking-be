@@ -26,10 +26,10 @@ spring:
             authorization-grant-type: authorization_code
         provider:
           auth0:
-            issuer-uri: https://huuhoai.jp.auth0.com/
+            issuer-uri:
       resourceserver:
         jwt:
-          issuer-uri: https://huuhoai.jp.auth0.com/
-          audiences: https://huuhoai.jp.auth0.com/api/v2/
-          jwk-set-uri: https://huuhoai.jp.auth0.com/.well-known/jwks.json
+          issuer-uri:
+          audiences:
+          jwk-set-uri:
 
