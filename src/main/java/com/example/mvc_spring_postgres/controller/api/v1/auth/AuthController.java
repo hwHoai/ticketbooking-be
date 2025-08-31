@@ -22,17 +22,8 @@ public class AuthController {
     //**************GET**************//
 
     @GetMapping("access_token/{code}")
-    public ResponseEntity<String> getAccessToken(@PathVariable String code, @RequestParam(name = "redirect_uri") String redirectUri)throws IOException {
-        try {
-
-            String jwt = jwtTokenService.oauthGetAccessToken(code, redirectUri);
-            return ResponseEntity.status(HttpStatus.OK).body(jwt);
-        }
-        catch (Exception e) {
-            log.error("Error getting access token: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-
+    public ResponseEntity<?> getAccessToken(@PathVariable String code, @RequestParam(name = "redirect_uri") String redirectUri) {
+        return jwtTokenService.oauthGetAccessToken(code, redirectUri);
     }
     //**************POST**************//
 
