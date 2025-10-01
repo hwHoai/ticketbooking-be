@@ -44,12 +44,13 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/auth/access_token/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh_token").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/user/1").hasRole("USER")
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .oauth2Login( oauthLogin -> oauthLogin
-                        .defaultSuccessUrl("http://localhost:5173", true)
+                        .defaultSuccessUrl("http://localhost:5173/auth_callback", true)
                         .loginPage("http://localhost:8081/oauth2/authorization/auth0"))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
