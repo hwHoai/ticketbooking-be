@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface JwtTokenService {
 
-    ResponseEntity<?> oauthGetAccessToken(String code, String redirectUri);
+    ResponseEntity<?> oauthGetAccessToken(String code);
+    ResponseEntity<?> oauthRefreshToken(String accessToken);
 
 }
