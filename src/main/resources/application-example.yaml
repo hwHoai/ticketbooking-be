@@ -1,0 +1,33 @@
+server:
+port:
+spring:
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name:
+  jpa:
+    database:
+    show-sql:
+    hibernate:
+      ddl-auto:
+    properties:
+      hibernate:
+        format_sql:
+        use_sql_comments:
+  security:
+    oauth2:
+      client:
+        registration:
+          auth0:
+            client-id:
+            client-secret:
+            redirect-uri:
+            authorization-grant-type:
+        provider:
+          auth0:
+            issuer-uri:
+      resourceserver:
+        jwt:
+          issuer-uri:
+          audiences:
