@@ -27,6 +27,31 @@ The API is designed to be robust and efficient, providing a powerful interface f
 - **API:** RESTful, JSON
 - **Build Tool:** Maven
 
+## 📂 Project Structure
+
+The project follows a standard layered architecture pattern to separate concerns and improve maintainability.
+
+```
+c:\workspace\ticketbooking-be
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── com
+    │   │       └── my_project
+    │   │           └── ticket_booking
+    │   │               ├── config         // Spring Security, Beans, etc.
+    │   │               ├── controller     // REST API endpoints
+    │   │               ├── dto            // Data Transfer Objects
+    │   │               ├── entity         // JPA database entities
+    │   │               ├── repository     // Spring Data JPA repositories
+    │   │               └── service        // Business logic layer
+    │   └── resources
+    │       ├── application.yaml           // Main application configuration
+    │       └── application-dev.yaml       // Development profile (gitignored)
+    └── test
+        └── java                           // Unit and integration tests
+```
+
 ## 🔧 Getting Started
 
 To get a local copy up and running, follow these simple steps.
@@ -124,15 +149,15 @@ To get a local copy up and running, follow these simple steps.
      * @param {PostUserRegistrationAPI} api - Interface whose methods can be used to change the behavior of the login flow.
      */
     exports.onExecutePostUserRegistration = async (event, api) => {
-      const {CLIENT_ID, CLIENT_SECRET, DOMAIN, USER_ROLE_ID} = event.secrets;
+      const { CLIENT_ID, CLIENT_SECRET, DOMAIN, USER_ROLE_ID } = event.secrets;
       const tokenRes = await fetch(`https://${DOMAIN}/oauth/token`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        method: "POST",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          "client_id": CLIENT_ID,
-          "client_secret": CLIENT_SECRET,
-          "audience":"YOUR_AUDIENCE",
-          "grant_type":"client_credentials"
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET,
+          audience: "YOUR_AUDIENCE",
+          grant_type: "client_credentials",
         }),
       });
 
@@ -146,17 +171,15 @@ To get a local copy up and running, follow these simple steps.
       const userId = event.user.user_id;
 
       await fetch(`AUTH0_ASSIGN_ROLE_API`, {
-        method: 'POST',
-        headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
-          "users": [
-            userId
-          ]
-        })
-      })
+          users: [userId],
+        }),
+      });
     };
     ```
 
@@ -199,23 +222,25 @@ To get a local copy up and running, follow these simple steps.
      * @param {PostLoginAPI} api - Interface whose methods can be used to change the behavior of the login flow.
      */
     exports.onExecutePostLogin = async (event, api) => {
-      if (event.stats.logins_count > 1 &&
+      if (
+        event.stats.logins_count > 1 &&
         event.authorization?.roles &&
-        event.authorization?.roles.length > 0) {
+        event.authorization?.roles.length > 0
+      ) {
         return;
       }
-  
-      const {CLIENT_ID, CLIENT_SECRET, DOMAIN, USER_ROLE_ID} = event.secrets;
+
+      const { CLIENT_ID, CLIENT_SECRET, DOMAIN, USER_ROLE_ID } = event.secrets;
       const tokenRes = await fetch(`https://${DOMAIN}/oauth/token`, {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-              "client_id": CLIENT_ID,
-              "client_secret": CLIENT_SECRET,
-              "audience":"YOUR_AUDIENCE",
-              "grant_type":"client_credentials"
-            }),
-          });
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          client_id: CLIENT_ID,
+          client_secret: CLIENT_SECRET,
+          audience: "YOUR_AUDIENCE",
+          grant_type: "client_credentials",
+        }),
+      });
 
       // @ts-ignore
       const tokenData = await tokenRes.json();
@@ -227,17 +252,15 @@ To get a local copy up and running, follow these simple steps.
       const userId = event.user.user_id;
 
       await fetch(`AUTH0_ASSIGN_ROLE_API`, {
-        method: 'POST',
-        headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
-          "users": [
-            userId
-          ]
-        })
-      })
+          users: [userId],
+        }),
+      });
     };
     ```
 
