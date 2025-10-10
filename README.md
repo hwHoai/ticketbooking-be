@@ -1,105 +1,266 @@
-# Ticket Booking System - Backend
+# Ticket Booking System - Backend API
 
-This repository contains the backend for a robust, scalable, and secure ticket booking platform. Built with Java, Spring Boot, and PostgreSQL, it leverages modern security standards like OAuth 2.0 and JWT to deliver a production-ready solution.
+This is the backend server for the **Ticket Booking** project, a full-stack event ticketing platform. This project was developed not only as a functional application but also as an exercise in building scalable, high-performance, and secure backend systems.
 
-## Table of Contents
+The API is designed to be robust and efficient, providing a powerful interface for the client-side application to consume.
 
-- [Core Features](#core-features)
-- [Technology Stack](#technology-stack)
-- [Architecture & Design](#architecture--design)
-  - [Layered Architecture](#layered-architecture)
-  - [API Design](#api-design)
-  - [Database Schema](#database-schema)
-- [Security Implementation](#security-implementation)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Configuration](#configuration)
-  - [Running the Application](#running-the-application)
+## ✨ Key Technical Features
 
-## Core Features
+- **Flexible Authentication & Authorization System:**
+- Integrated **Auth0** for seamless user registration and login, including social providers.
+- Secured API endpoints using **Spring Security** and **JSON Web Tokens (JWT)**.
+- Implemented **Role-Based Access Control (RBAC)** to manage user permissions (e.g., USER, ORGANIZER, ADMIN).
+- **Advanced Event Management:**
+- Provides RESTful APIs for organizers to perform full CRUD operations on events and tickets.
+- Features an endpoint to store and retrieve custom, interactive event map data drawn on the client-side.
+- **Performance-Oriented Architecture:**
+- Designed with RESTful API principles for clean, predictable interactions.
+- Optimized database queries to minimize response times.
+- (Future Goal) Built with the intention to incorporate Caching (Redis) and a Message Queue (Kafka/RabbitMQ) to handle high-traffic scenarios like flash ticket sales.
 
-- **OAuth 2.0 Authentication:** Secure user authentication using the Authorization Code Flow with an external provider (e.g., Auth0, Keycloak).
-- **JWT-Based Authorization:** Stateless API security using JSON Web Tokens (JWTs) for authenticated requests.
-- **Role-Based Access Control (RBAC):** Granular control over API endpoints based on user roles (e.g., `USER`, `ADMIN`).
-- **Token Refresh Mechanism:** Seamlessly renews access tokens using refresh tokens for an uninterrupted user experience.
-- **Event & Ticket Management:** Core business logic for creating, viewing, and managing events and tickets.
-- **Advanced Data Modeling:** Includes support for relationships (One-to-One, Many-to-Many), composite keys, and performance-optimized indexing.
-- **Centralized Exception Handling:** Provides consistent and predictable error responses across the API.
+## 🚀 Tech Stack
 
-## Technology Stack
-
-- **Framework:** Spring Boot 3
 - **Language:** Java 17
-- **Security:** Spring Security, OAuth 2.0, JWT
+- **Framework:** Spring Boot 3.x
+- **Security:** Spring Security, Auth0 Integration
 - **Database:** PostgreSQL
-- **Data Access:** Spring Data JPA, Hibernate
-- **Build Tool:** Apache Maven
-- **Utilities:** Lombok
+- **API:** RESTful, JSON
+- **Build Tool:** Maven
 
-## Architecture & Design
+## 🔧 Getting Started
 
-The project follows a clean, layered architecture that promotes separation of concerns, maintainability, and scalability.
-
-### Layered Architecture
-
-```
-src/main/java/com/example/mvc_spring_postgres/
-├── config/                # Security (Spring Security, CORS) and application configuration.
-├── controller/api/v1/     # REST API controllers, versioned for future compatibility.
-├── dto/                   # Data Transfer Objects for API request/response, decoupling API from the data model.
-├── entity/                # JPA entities defining the database tables and relationships.
-├── repository/            # Spring Data JPA repositories for database interaction.
-├── service/               # Business logic layer, containing service interfaces and implementations.
-```
-
-- **Controller Layer:** Handles all incoming HTTP requests, validates input, and delegates to the service layer.
-- **Service Layer:** Contains the core business logic. It uses DTOs to interact with the controller, ensuring the internal domain models are not exposed.
-- **Repository Layer:** Abstracted data access using Spring Data JPA, providing a clean interface for database operations.
-
-### API Design
-
-- **RESTful & Versioned:** The API is designed following REST principles and is versioned (`/api/v1/`) to ensure backward compatibility as the application evolves.
-- **Stateless:** Uses JWTs for session management, making the API stateless and easily scalable horizontally.
-
-### Database Schema
-
-- **JPA & Hibernate:** Leverages JPA for object-relational mapping, with entities clearly defining the database structure.
-- **UUIDs for Primary Keys:** Uses `UUID` as the primary key for major entities, a best practice for distributed systems that prevents ID conflicts.
-- **Indexing:** Key database columns are indexed (`@Index`) to ensure fast query performance, especially on search operations.
-- **Complex Relationships:** Implements `One-to-One`, `One-to-Many`, and `Many-to-Many` relationships with composite keys (`@EmbeddedId`) to model complex domain requirements accurately.
-
-## Security Implementation
-
-Security is a first-class citizen in this project, built upon the robust Spring Security framework.
-
-- **OAuth 2.0 & JWT:** The application acts as an OAuth 2.0 Resource Server, validating JWTs issued by an external Authorization Server (e.g., Auth0).
-- **Centralized Security Configuration:** All security rules, including endpoint permissions, CORS policy, and token validation logic, are defined in `SecurityConfig.java`.
-- **Token Validation:** JWTs are rigorously validated for issuer, audience, and expiration, with a configurable clock skew to handle minor time differences.
-- **Custom JWT Claims for Roles:** The system is configured to extract user roles from a custom claim within the JWT, enabling fine-grained, role-based access control.
-- **Secure Configuration:** Sensitive information like database credentials and JWT secrets are externalized into `application.yaml` files, which should never be committed to version control.
-
-## Getting Started
+To get a local copy up and running, follow these simple steps.
 
 ### Prerequisites
 
-- Java 17+
-- Apache Maven
-- PostgreSQL Database
-- An OAuth 2.0 compatible Authorization Server (e.g., Auth0)
+- JDK 17 or later
+- Maven
+- A running PostgreSQL instance
 
-### Configuration
+### Installation
 
-1.  Clone the repository.
-2.  Create a copy of `application-example.yaml` and name it `application-dev.yaml`.
-3.  Update `application-dev.yaml` with your PostgreSQL database credentials.
-4.  Configure the `issuer-uri` in `application-dev.yaml` to point to your OAuth 2.0 provider's issuer URL.
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/hwHoai/ticketbooking-be.git
+    cd ticketbooking-be
+    ```
+2.  **Database Configuration**
 
-### Running the Application
+    - Open your PostgreSQL client and create a new database.
 
-Run the application using the Spring Boot Maven plugin:
+    ```sql
+    CREATE DATABASE ticket_booking_db;
+    ```
 
-```bash
-./mvnw spring-boot:run
-```
+3.  **Environment Configuration**
 
-The API will be available at `http://localhost:{application-dev.server.port}`.
+    - This project uses profile-specific configuration to separate development settings and secrets from the main codebase.
+    - Navigate to `src/main/resources/` and create a new file named `application-dev.yaml`. This file is intentionally ignored by Git to keep your credentials private.
+    - Add the following complete configuration to your `application-dev.yaml` file. See the guide below the code block for instructions on how to find each value.
+
+    ```yaml
+    # c:\workspace\ticketbooking-be\src\main\resources\application-dev.yaml
+    server:
+      port: 8080 # The port the application will run on
+
+    spring:
+      # --- DATABASE CONFIGURATION ---
+      datasource:
+        url: jdbc:postgresql://localhost:5432/ticket_booking_db
+        username: your_postgres_username
+        password: your_postgres_password
+        driver-class-name: org.postgresql.Driver
+
+      # --- JPA & HIBERNATE CONFIGURATION ---
+      jpa:
+        database: postgresql
+        show-sql: true
+        hibernate:
+          ddl-auto: update # Creates/updates the DB schema. Use "validate" in production.
+        properties:
+          hibernate:
+            format_sql: true
+            use_sql_comments: true
+
+      # --- SECURITY CONFIGURATION ---
+      security:
+        oauth2:
+          client:
+            registration:
+              auth0:
+                client-id: <YOUR_AUTH0_CLIENT_ID>
+                client-secret: <YOUR_AUTH0_CLIENT_SECRET>
+                authorization-grant-type: authorization_code
+                redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            provider:
+              auth0:
+                issuer-uri: https://<YOUR_AUTH0_APP_DOMAIN>
+          resourceserver:
+            jwt:
+              issuer-uri: https://<YOUR_AUTH0_APP_DOMAIN>
+              audiences: <YOUR_AUTH0_API_AUDIENCE>
+    ```
+
+    #### **Guide to Auth0 Configuration Values**
+
+    You will need to retrieve values from two different places in your Auth0 dashboard: the **API** settings and the **Application** settings.
+
+    ### Auth0 Action Triggers
+
+    To enable Role-Based Access Control (RBAC), this project relies on custom **Auth0 Actions**. These are JavaScript functions that execute at specific points in the authentication pipeline. You must create and deploy these actions in your Auth0 dashboard under **Actions -> Library** and then add them to the **Login Flow**.
+
+    The following actions are used in this project:
+
+      <details>
+        <summary><strong>1. `set role` (Trigger: Post User Registration)</strong></summary>
+
+    - **Purpose:** Automatically assigns a default `USER` role to a new user immediately after they complete their registration. This ensures every new user has a baseline set of permissions from the start.
+
+    ```javascript
+    /**
+     * Handler that will be called during the execution of a PostUserRegistration flow.
+     *
+     * @param {Event} event - Details about the user and the context in which they are logging in.
+     * @param {PostUserRegistrationAPI} api - Interface whose methods can be used to change the behavior of the login flow.
+     */
+    exports.onExecutePostUserRegistration = async (event, api) => {
+      const {CLIENT_ID, CLIENT_SECRET, DOMAIN, USER_ROLE_ID} = event.secrets;
+      const tokenRes = await fetch(`https://${DOMAIN}/oauth/token`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          "client_id": CLIENT_ID,
+          "client_secret": CLIENT_SECRET,
+          "audience":"YOUR_AUDIENCE",
+          "grant_type":"client_credentials"
+        }),
+      });
+
+      // @ts-ignore
+      const tokenData = await tokenRes.json();
+      if (!tokenData.access_token) {
+        return;
+      }
+
+      const token = tokenData.access_token;
+      const userId = event.user.user_id;
+
+      await fetch(`AUTH0_ASSIGN_ROLE_API`, {
+        method: 'POST',
+        headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+        body: JSON.stringify({
+          "users": [
+            userId
+          ]
+        })
+      })
+    };
+    ```
+
+      </details>
+
+      <details>
+        <summary><strong>2. `assign role claim` (Trigger: Login / Post Login)</strong></summary>
+
+    - **Purpose:** After a user successfully logs in, this action fetches their assigned roles and adds them into a custom claim within the Access Token. Spring Security is configured to read this claim to enforce endpoint security.
+
+    ```javascript
+    /**
+     * Handler that will be called during the execution of a PostLogin flow.
+     *
+     * @param {Event} event - Details about the user and the context in which they are logging in.
+     * @param {PostLoginAPI} api - Interface whose methods can be used to change the behavior of the login flow.
+     */
+    exports.onExecutePostLogin = async (event, api) => {
+      if (event.authorization) {
+        api.accessToken.setCustomClaim(
+          "https://ticketbooking.com/roles",
+          event.authorization.roles
+        );
+      }
+    };
+    ```
+
+      </details>
+
+      <details>
+        <summary><strong>3. `social login set role` (Trigger: Login / Post Login)</strong></summary>
+
+    - **Purpose:** This action handles role assignment specifically for users signing in via social providers (e.g., Google, GitHub). It ensures that on their first social login, they are assigned the default `USER` role if they don't already have one.
+
+    ```javascript
+    /**
+     * Handler that will be called during the execution of a PostLogin flow.
+     *
+     * @param {Event} event - Details about the user and the context in which they are logging in.
+     * @param {PostLoginAPI} api - Interface whose methods can be used to change the behavior of the login flow.
+     */
+    exports.onExecutePostLogin = async (event, api) => {
+      if (event.stats.logins_count > 1 &&
+        event.authorization?.roles &&
+        event.authorization?.roles.length > 0) {
+        return;
+      }
+  
+      const {CLIENT_ID, CLIENT_SECRET, DOMAIN, USER_ROLE_ID} = event.secrets;
+      const tokenRes = await fetch(`https://${DOMAIN}/oauth/token`, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              "client_id": CLIENT_ID,
+              "client_secret": CLIENT_SECRET,
+              "audience":"YOUR_AUDIENCE",
+              "grant_type":"client_credentials"
+            }),
+          });
+
+      // @ts-ignore
+      const tokenData = await tokenRes.json();
+      if (!tokenData.access_token) {
+        return;
+      }
+
+      const token = tokenData.access_token;
+      const userId = event.user.user_id;
+
+      await fetch(`AUTH0_ASSIGN_ROLE_API`, {
+        method: 'POST',
+        headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+        body: JSON.stringify({
+          "users": [
+            userId
+          ]
+        })
+      })
+    };
+    ```
+
+      </details>
+
+4.  **Run the Application with the 'dev' Profile**
+    - To tell Spring Boot to use your `application-dev.yaml` configuration, you need to activate the `dev` profile.
+    - **From your IDE:** Set the active Spring profile to `dev` in your application's run/debug configuration.
+    - **From the command line:** Use the following Maven command:
+      ```bash
+      # The 'dev' profile will load application-dev.yaml
+      mvn spring-boot:run -Dspring-boot.run.profiles=dev
+      ```
+    - The server will start on `http://localhost:8080`.
+
+## 📚 Core API Endpoints
+
+The following table lists the API endpoints implemented in the project's controllers.
+
+| Endpoint                           | Method | Description                                         | Auth Required  |
+| :--------------------------------- | :----- | :-------------------------------------------------- | :------------- |
+| `/api/v1/user/info`                | `GET`  | Retrieves the logged-in user's profile information. | Yes            |
+| `/api/v1/auth/access_token/{code}` | `GET`  | Get access token                                    | No (uses code) |
+| `/api/v1/auth/refresh_token`       | `POST` | Refresh access token                                | No (uses RT)   |
+
+> **Note**: "Auth Required: Yes" implies that a valid **Access Token (AT)** must be included in the request header. "Use RT" means a valid **Refresh Token (RT)** is needed for that specific operation. Code is the auth code given on the callback url when login.
